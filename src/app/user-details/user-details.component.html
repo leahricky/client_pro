@@ -1,0 +1,207 @@
+<!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script> -->
+<!-- <script src="//code.jquery.com/jquery-1.11.1.min.js"></script> -->
+
+<div >
+  <table>
+    <tr>
+      <td>
+        <form class="example-form" [formGroup]="user_details_f">
+
+
+          <div class="col-md-6 form-line">
+            <mat-form-field class="example-full-width" appearance="fill">
+              <mat-label>סטטוס תעסוקתי</mat-label>
+              <mat-select formControlName="workingStatus" [errorStateMatcher]="matcher">
+                <mat-option *ngFor="let opt of workingStatusOpt" [value]="opt.name">
+                  {{opt.name}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="user_details_f.hasError('required')">
+                <strong>שדה חובה</strong>
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width" appearance="fill">
+              <mat-label> סטטוס משפחתי</mat-label>
+              <mat-select formControlName="marriageStatus" [errorStateMatcher]="matcher">
+                <mat-option *ngFor="let opt of marriageStatusOpt" [value]="opt.name">
+                  {{opt.name}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="user_details_f.hasError('required')">
+                <strong>שדה חובה</strong>
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width" appearance="fill">
+              <mat-label>עיסוק</mat-label>
+              <textarea formControlName="occupation" matInput placeholder="Ex. It makes me feel..."></textarea>
+            </mat-form-field>
+
+            <!-- עובד קבוע -->
+            <div id="permanent" class="example-full-width">
+              <label for="exampleInputUsername"> :עובדת קבועה </label>
+              <input type="checkbox" formControlName="permanentWorker" id="permanent" (click)="change()">
+            </div>
+
+
+            <div>
+              <button *ngIf="flag_add_edit==false" type="button" class="btn btn-default submit" (click)="add_user()">
+                הוספה</button>
+              <button *ngIf="flag_add_edit==true" type="button" class="btn btn-default submit" (click)="update_user()">
+                עדכון</button>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+
+            <mat-form-field class="example-full-width" appearance="fill">
+              <mat-label>תעודת זהות</mat-label>
+              <input type="text" matInput formControlName="idNumber" [errorStateMatcher]="matcher" #id
+                (change)="check_if_user_exists(id.value)">
+              <mat-error *ngIf="user_details_f.hasError('required')">
+                <strong>שדה חובה</strong>
+              </mat-error>
+              <mat-error *ngIf="user_details_f.hasError('pattern') && !user_details_f.hasError('required')">הכנס מס תז
+                תקין</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width" appearance="fill">
+              <mat-label>שם פרטי</mat-label>
+              <input type="text" matInput formControlName="firstName" [errorStateMatcher]="matcher">
+              <mat-error *ngIf="user_details_f.hasError('required')">
+                <strong>שדה חובה</strong>
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width" appearance="fill">
+              <mat-label>שם משפחה</mat-label>
+              <input type="text" matInput formControlName="lastName" [errorStateMatcher]="matcher">
+              <mat-error *ngIf="user_details_f.hasError('required')">
+                <strong>שדה חובה</strong>
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width" appearance="fill">
+              <mat-label>כתובת מייל</mat-label>
+              <input type="email" matInput formControlName="mail" [errorStateMatcher]="matcher"
+                placeholder="Ex. pat@example.com">
+              <mat-error *ngIf="user_details_f.hasError('email') && !user_details_f.hasError('required')">
+                כתובת המייל אינה תיקנית </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width" appearance="fill">
+              <mat-label>מס' טלפון</mat-label>
+              <input type="text" matInput formControlName="phone" [errorStateMatcher]="matcher">
+              <mat-error *ngIf="user_details_f.hasError('required')">
+                <strong>שדה חובה</strong>
+              </mat-error>
+              <mat-error *ngIf="user_details_f.hasError('pattern') && !user_details_f.hasError('required')">הכנס מס תקין
+              </mat-error>
+            </mat-form-field>
+
+          </div>
+
+          <!-- </mat-form-field> -->
+
+        </form>
+      </td>
+
+      <!-- <table>
+  <tr>
+    <td>
+        <div class="section-content">
+            <h1 class="section-header"> <span class="content-header wow fadeIn " data-wow-delay="0.2s" data-wow-duration="2s"> הכנס פרטי משתמש:</span></h1>              
+        </div> 
+        <div class="contact-section">
+        <div class="container">
+            <form [formGroup]="user_details_f"> 
+
+              <div><img class="form-group" src="/assets/{{path}}.png" style="width:5% ;position:absolute; right:55%; top: 40%;" ></div>
+                <div class="col-md-6 form-line">
+                    <div class="form-group" >
+                        <label for ="description"> סטטוס תעסוקתי:  </label>
+                        <select formControlName="idWorkingStatus">
+                            <option >שכירה</option>
+                            <option>עצמאית </option>
+                            <option>פרילנסרית</option>
+                        </select>
+                        <div *ngIf="flag_required==true && user_details_f.controls['idWorkingStatus'].errors?.['required']" class="valid">שדה זה הינו חובה </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label for ="description"> סטטוס משפחתי:  </label>
+                      <select formControlName="idMarriageStatus">
+                          <option>נשואה</option>
+                          <option>רווקה </option>
+                      </select>
+                      <div *ngIf="flag_required==true && user_details_f.controls['idMarriageStatus'].errors?.['required']" class="valid">שדה זה הינו חובה </div>
+                  </div>
+
+
+                    <div class="form-group">
+                        <label for ="description"> עיסוק:</label>
+                        <textarea  class="form-control" formControlName="occupation" id="description" placeholder="הכנס עיסוק"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleInputUsername">  :עובדת קבועה </label>
+                        <input type="checkbox" class="form-control" formControlName="permanentWorker" id="permanent" style="width: 50px;"  (click)="change()">
+                    </div>
+
+                    <div >
+                        <button  *ngIf="flag_add_edit==false" type="button" class="btn btn-default submit" (click)="add_user()" >  הוספה</button>
+                        <button *ngIf="flag_add_edit==true" type="button" class="btn btn-default submit"  (click)="update_user()">  עדכון</button>
+                  </div>
+                </div>
+
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="exampleInputUsername">:תעודת זהות</label>
+                      <input type="text" class="form-control"  formControlName="idNumber" id="id" placeholder=" הכנס תעודת זהות" #id (change)="check_if_user_exists(id.value)"> 
+                      <div *ngIf="flag_required==true && user_details_f.controls['idNumber'].errors?.['required']" class="valid">שדה זה הינו חובה </div>
+                      <div *ngIf="user_details_f.controls['idNumber'].errors?.['pattern']" class="valid">הכנס מספר ת.ז תקין </div>
+                    </div>
+                      <div class="form-group">
+                          <label for="exampleInputUsername">:שם פרטי</label>
+                        <input type="text" class="form-control" formControlName="firstName"  id="f_name" placeholder=" הכנס שם פרטי">
+                        <div *ngIf="flag_required==true && user_details_f.controls['firstName'].errors?.['required']"class="valid">שדה זה הינו חובה </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputUsername">:שם משפחה</label> 
+                      <input type="text" class="form-control"  formControlName="lastName" id="l_name" placeholder=" הכנס שם משפחה">
+                      <div *ngIf="flag_required==true && user_details_f.controls['lastName'].errors?.['required']" class="valid">שדה זה הינו חובה </div>
+                    </div>
+                      <div class="form-group">
+                        <label for="exampleInputEmail">:מייל</label>
+                        <input type="email" class="form-control"  formControlName="mail" id="exampleInputEmail" placeholder=" הכנס כתובת מייל ">
+                        <div *ngIf="user_details_f.controls['mail'].touched && user_details_f.controls['mail'].errors?.['email']" class="valid">כתובת המייל אינה חוקית</div>
+                      </div>	
+                      <div class="form-group">
+                        <label for="telephone">:טלפון</label>
+                        <input type="tel" class="form-control" formControlName="phone"  id="telephone" placeholder=" הכנס מספר טלפון">
+                        <div *ngIf="flag_required==true && user_details_f.controls['phone'].errors?.['required']" class="valid">שדה זה הינו חובה </div>
+                        <div *ngIf="user_details_f.controls['phone'].errors?.['pattern']" class="valid">הכנס מספר תקין </div>
+
+                      </div>
+                </div>
+            
+
+            </form>
+        </div>
+</div>-->
+    </tr>
+  </table>
+</div>
+<!-- <td> -->
+
+<div *ngIf="flag_permanent == false" > 
+   <!-- && fromDialog==true" --> 
+  <!-- //</div>style="position:absolute; left:20%"> -->
+
+  <app-room-booking></app-room-booking>
+
+</div>
+<!-- </td> -->

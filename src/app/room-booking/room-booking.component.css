@@ -1,0 +1,60 @@
+  .form-line{
+    border-right: 1px solid #B29999;
+  }
+
+  .col-cmd-6-form-line{
+    width: 50%;
+  }
+
+  .form-group{
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif, cursive;
+    font-size: medium;
+  }
+  
+  .demoPadder {
+        padding-top:15px;
+  }
+
+  .selected{
+    color: #fff;
+    background-color: #007aff;
+    border-color: #007aff;
+  }
+
+  .btn-default {
+    color: #007aff;
+     /* background-color: #fff; */
+    border-color: #007aff;
+  }
+
+        /* .btn-default:active, .btn-default.active, .open > .btn-default.dropdown-toggle {
+        color: #fff;
+         background-color: #007aff; 
+        border-color: #007aff; 
+    }*/
+
+  .btn-default:hover{
+    background-color: rgb(177, 226, 43);
+  }
+ 
+  /* .days{
+      background-color: white;
+      color: black;
+  }
+
+  .days:hover{
+    background-color: rgb(233, 14, 14);
+    color: black;
+}
+
+.days:{
+    background-color: rgb(233, 14, 14);
+    color: black;
+} */
+
+.btn span.glyphicon {    			
+	opacity: 0;				
+}
+.btn.active span.glyphicon {				
+	opacity: 1;				
+}

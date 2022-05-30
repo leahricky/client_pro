@@ -1,0 +1,189 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+<div style="position:absolute;top:30%;left:20%">
+    <form [formGroup]="roomb_details">
+        <div class="col-md-6 form-line">
+            <table>
+                <tr>
+                    <td>
+
+                        <mat-form-field class="example-full-width" appearance="fill">
+                            <mat-label>סוג החדר</mat-label>
+                            <mat-select formControlName="roomType" [errorStateMatcher]="matcher">
+                                <mat-option *ngFor="let type of types" [value]="type.id">
+                                    {{type.name}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="roomb_details.hasError('required')">
+                                <strong>שדה חובה</strong>
+                            </mat-error>
+                        </mat-form-field>
+
+                    </td>
+
+                    <td >
+
+                        <mat-form-field class="example-full-width" appearance="fill">
+                            <mat-label>שם החדר</mat-label>
+                            <mat-select formControlName="roomName" [errorStateMatcher]="matcher">
+                                <mat-option *ngFor="let rName of rNames" [value]="rName.id">
+                                    {{rName.description}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="roomb_details.hasError('required')">
+                                <strong>שדה חובה</strong>
+                            </mat-error>
+                        </mat-form-field>
+
+                    </td>
+
+                    <td>
+                        <div style="padding-right: 40%;">
+                            <a (click)="seeMap()">לצפייה במפה</a>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>תאריך התחלה</mat-label>
+                            <input matInput [matDatepicker]="Spicker" formControlName="s_date">
+                            <mat-hint>MM/DD/YYYY</mat-hint>
+                            <mat-datepicker-toggle matSuffix [for]="Spicker"></mat-datepicker-toggle>
+                            <mat-datepicker #Spicker></mat-datepicker>
+                        </mat-form-field>
+
+                    </td>
+                    <td>
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>תאריך סיום</mat-label>
+                            <input matInput [matDatepicker]="Epicker" formControlName="e_date">
+                            <mat-hint>MM/DD/YYYY</mat-hint>
+                            <mat-datepicker-toggle matSuffix [for]="Epicker"></mat-datepicker-toggle>
+                            <mat-datepicker #Epicker></mat-datepicker>
+                        </mat-form-field>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>
+                        <label>
+                            בחר ימים:
+                        </label>
+                    </td>
+                    <td>
+
+                        <div class="btn-group" role="group" aria-label="First group">
+                            <button *ngFor="let d of days" #btn type="button" [ngClass]="{'selected':d.isSelected}"
+                                class="btn" (click)="day(d)">{{d.description}}</button>
+                        </div>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table *ngFor="let d of help">
+                            <tr>
+                                <td>
+                                    <label>
+                                        משעה
+                                    </label>
+                                </td>
+                                <td>
+                                    <input formControlName="s_hour" type="time" step="120" min="12:00" max="18:00"
+                                        (change)="fillUp()" required>
+                                    <!-- <input formControlName="s_hour" type="datetime-local|date:'hh:mm'" step="120"  min="12:00" max="18:00" (change)="fillUp()" required > -->
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <label>
+                                        עד שעה
+                                    </label>
+                                </td>
+                                <td>
+                                    <input formControlName="e_hour" type="time" step="120" min="12:00" max="18:00"
+                                        (change)="fillUp()" required>
+                                    <!-- <input formControlName="e_hour" type="datetime-local|date:'hh:mm'" step="120"  min="12:00" max="18:00" (change)="fillUp()" required> -->
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <label>
+                                        תדירות
+                                    </label>
+                                </td>
+                                <!-- <td>
+                            <select formControlName="________">
+                                <option>פעם בשבוע</option>
+                                <option>פעם בשבועיים</option>
+                            </select>
+                        </td> -->
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <button (click)="save()">שמירה</button>
+                    </td>
+                </tr>
+
+            </table>
+
+
+
+
+            <!-- <button *ngif="">הוספה</button>
+        <button *ngif="">עדכון</button> -->
+
+        </div>
+
+
+    </form>
+
+</div>
+<div style="position:absolute;top:55%;left:6%">
+    <form *ngFor="let rB of rBs">
+        <mat-list>
+            <mat-list-item id="name">שם החדר: {{rB.roomName}}</mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item>
+                <table>
+                    <tr>
+                        <td id="sDate">מתאריך: {{rB.sDate | date:'yyyy-MM-dd'}}</td>
+                        <td id="eDate">-------------------עד תאריך: {{rB.eDate | date:'yyyy-MM-dd'}}</td>
+                    </tr>
+                </table>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item>
+                <div *ngFor="let t of rB.DayHours">
+                    <table>
+                        <tr>
+                            <td></td>
+                            <td>{{t.day}}</td>
+
+                        </tr>
+                        <tr>
+                            <td>שעת התחלה</td>
+                            <td>{{t.sHour | date:'hh:mm:ss'}}</td>
+                        </tr>
+                        <tr>
+                            <td>שעת סיום</td>
+                            <td>{{t.eHour | date:'hh:mm:ss'}}</td>
+                        </tr>
+
+                    </table>
+                </div>
+
+            </mat-list-item>
+        </mat-list>
+    </form>
+</div>

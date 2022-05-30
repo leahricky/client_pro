@@ -1,0 +1,92 @@
+<form [formGroup]="order_details">
+    <table>
+        <tr>
+            <div>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>סוג החדר</mat-label>
+                    <mat-select formControlName="type">
+                        <mat-option *ngFor="let type of types" [value]="type.id">
+                            {{type.name}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="order_details.hasError('required')">
+                        <strong>שדה חובה</strong>
+                    </mat-error>
+                </mat-form-field>
+
+            </div>
+
+
+            <table>
+                <tr>
+                    <td>
+                        <mat-form-field appearance="fill">
+                            <mat-label>תאריך התחלה</mat-label>
+                            <input matInput [matDatepicker]="Spicker" formControlName="sDateTime">
+                            <mat-hint>MM/DD/YYYY</mat-hint>
+                            <mat-datepicker-toggle matSuffix [for]="Spicker"></mat-datepicker-toggle>
+                            <mat-datepicker #Spicker></mat-datepicker>
+                        </mat-form-field>
+                    </td>
+                    <td>
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>תאריך סיום</mat-label>
+                            <input matInput [matDatepicker]="Epicker" formControlName="eDateTime">
+                            <mat-hint>MM/DD/YYYY</mat-hint>
+                            <mat-datepicker-toggle matSuffix [for]="Epicker"></mat-datepicker-toggle>
+                            <mat-datepicker #Epicker></mat-datepicker>
+                        </mat-form-field>
+                    </td>
+                </tr>
+            </table>
+            <!-- <td>
+                <div class="form-group">
+                    <label for="exampleInputUsername"> :מתאריך</label>
+                </div>
+            </td>
+            <td>
+
+                <div class="form-group">
+                    <input type="datetime-local" class="form-control" formControlName="sDateTime" style="width: 80%;">
+                </div>
+            </td>
+
+
+
+            <td>
+                <div class="form-group">
+                    <label for="exampleInputUsername"> :עד תאריך</label>
+                </div>
+            </td>
+            <td>
+                <div class="form-group">
+                    <input type="datetime-local" class="form-control" formControlName="eDateTime" style="width: 80%;">
+                </div>
+            </td> -->
+    </table>
+</form>
+<button (click)="check_availability()">fffffffff</button>
+
+<div *ngIf="flag_suc==true">
+    <img src="/assets/מפת עמדות.jpg">
+</div>
+
+<div *ngFor="let div of divs">
+    <div class="bold" [ngStyle]="{'left': div.xStartPoint+'px','top': div.yStartPoint+'px',
+    'height': (div.yEndPoint-div.yStartPoint)+'px','width': (div.xEndPoint-div.xStartPoint)+'px'}">testing
+        div.yEndPoint{{div.yEndPoint}}-div.yStartPoint:{{div.yStartPoint}}</div>
+</div>
+
+<!-- style.top="{{div.yStartPoint}}+px" style.width="{{div.xStartPoint-div.xEndPoint}}+px"
+        style.height="{{div.yEndPoint-div.yStartPoint}}+px"  -->
+
+<!-- style="position:absalute; background-color: red;"  -->
+<!-- <div class="divs" *ngFor="let div of divs" style="position: absolute; background-color: red;">
+    <div>
+        testing
+    </div>
+</div> -->
+
+<!-- <app-create-room  (onSaveRoom)="add_div($event)" ></app-create-room> -->

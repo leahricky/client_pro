@@ -1,0 +1,108 @@
+
+
+.example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+/* .col-md-6-form-line{
+  border-right: 1px solid #B29999;
+  width: 100%;
+} */
+
+/* .example-form{
+  width:100%
+} */
+
+/* .col-md-6{
+  border-right: 1px solid #B29999;
+  width: 100%;
+} */
+
+textarea.form-control {
+  height: 135px;
+}
+
+/* #permanent{
+  position: inherit;
+}  */
+
+/* 
+body{
+  background-image: url("/assets/TEMECH22.png");
+  background-position: center;
+  background-size: cover;
+} */
+
+
+
+/*Contact sectiom*/
+/* :host(app-user-details) { width:20% }  */
+/* .content-header{
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif, cursive;
+    color:#fcc500;
+    font-size: 35px;
+  }
+  
+  .section-content{
+    text-align: center; 
+  
+  }
+  
+  .contact-section{
+    padding-top: 40px;
+  }
+  .contact-section .col-md-6{
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif, cursive;
+    width: 50%;
+  }
+  
+  .form-line{
+    border-right: 1px solid #B29999;
+  }
+  
+  .form-group{
+    margin-top: 10px;
+  }
+  
+  label{
+    font-size: 1.3em;
+    line-height: 1em;
+    font-weight: normal;
+  }
+  .form-control{
+    font-size: 1.3em;
+    color: #080808;
+  }
+  textarea.form-control {
+      height: 135px;
+  }
+  
+  .submit{
+    font-size: 1.1em;
+    float: right;
+    width: 150px;
+    background-color: white;
+    color: rgb(0, 0, 0);
+  
+  }
+
+
+.valid{
+  color: red;
+} */
+/* 
+#permanent{
+  position: inherit;
+} */
+/* body{
+  background-image: url("/assets/TEMECH22.png");
+  background-position: center;
+  background-size: cover;
+} */
+
