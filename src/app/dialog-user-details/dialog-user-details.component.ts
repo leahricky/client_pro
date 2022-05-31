@@ -1,4 +1,4 @@
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogCreateRoomData } from '../create-room/create-room.component';
@@ -25,4 +25,7 @@ export class DialogUserDetailsComponent implements OnInit {
     this.user=this.data.user;
   }
 
+  GetChildData(user:User){
+    this.dialogRef.close(user);
+  }
 }

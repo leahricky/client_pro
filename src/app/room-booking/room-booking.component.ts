@@ -52,7 +52,17 @@ export class RoomBookingComponent implements OnInit {
     { id: 7, name: "עמדת מחשב" }
   ];
 
-  rNames :Base_code[]= [];
+  computerRoomTypeNames!:string[];
+  computerTypeNames!: string[];
+  meetingRoomTypeNames!: string[];
+
+  typeNames = new Map<string, string[]>([
+    ["חדר מחשבים",this.computerRoomTypeNames],
+    ["עמדת מחשב",this.computerTypeNames],
+    ["חדר ישיבות",this.meetingRoomTypeNames]
+  ]);
+
+  RoomNamesToSelect?: string[];
 
   rBookings!: Room_booking[];
   rBookingObj!: RoomBookingForClient[];
@@ -70,7 +80,7 @@ export class RoomBookingComponent implements OnInit {
   details: DateTimeType[] = [];
 
   dateTimeSelected: Room_booking[] = [];
-  constructor(private _userService: User_Service, private _roomB: Room_booking_Service, public dialog: MatDialog, public datepipe: DatePipe) { }
+  constructor(private _userService: User_Service, private _roomB: Room_booking_Service, private _room: Room_Service, public dialog: MatDialog, public datepipe: DatePipe) { }
 
 
   openDialog(): void {
@@ -99,6 +109,16 @@ export class RoomBookingComponent implements OnInit {
       e_hour: new FormControl()
     })
 
+    this.RoomNamesToSelect = new String[]();
+      //מילוי מערכי שמות החדרים
+      for (let entry of this.typeNames.entries()){
+        this._room.getroom_by_type(String(entry[0])).subscribe(y=>{
+          y.forEach(r=>{
+            if(r)
+             entry[1].push(r.name);
+          })
+      })
+      }
     //this.rBookings = this._roomB.getRBookings();
   }
 
@@ -201,8 +221,6 @@ export class RoomBookingComponent implements OnInit {
       element.roomName = "לובי";
 
 
-
-
       //element.end_date=Date.now();
       //let pos =this.dayon.indexOf(true);
       this.dayon[pos] = false;
@@ -238,6 +256,7 @@ export class RoomBookingComponent implements OnInit {
   validAllFull() {
 
     if (this.roomb_details.controls['roomType'].value &&
+      this.roomb_details.controls['roomName'].value&&
       this.roomb_details.controls['s_date'].value &&
       this.roomb_details.controls['e_date'].value &&
       this.roomb_details.controls['s_hour'].value &&
@@ -302,5 +321,10 @@ export class RoomBookingComponent implements OnInit {
         }
       });
     })
+  }
+
+  showTypeNames(){
+
+    this.RoomNamesToSelect =  this.typeNames.get(this.roomb_details.controls['roomName'].value);
   }
 } 

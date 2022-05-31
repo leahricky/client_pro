@@ -1,9 +1,9 @@
-import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { User } from '../models/user.model';
 import { User_Service } from '../services/user.service';
 import { DatePipe, DATE_PIPE_DEFAULT_TIMEZONE } from '@angular/common';
 import { newArray } from '@angular/compiler/src/util';
-import { LazyLoadEvent } from 'primeng/api';
+import { ConfirmationService, LazyLoadEvent, MessageService } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
 import { DYNAMIC_TYPE } from '@angular/compiler';
 //import { ENETDOWN } from 'constants';
@@ -14,6 +14,8 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogRoomBookingsComponent } from '../dialog-room-bookings/dialog-room-bookings.component';
 import { DialogUserDetailsComponent } from '../dialog-user-details/dialog-user-details.component';
+import { getMatScrollStrategyAlreadyAttachedError } from '@angular/cdk/overlay/scroll/scroll-strategy';
+import { Room_booking_Service } from '../services/room_booking.service';
 
 
 export interface DialogUserIdData {
@@ -28,7 +30,6 @@ export interface DialogUserIdData {
 
 })
 export class FindUsersComponent implements OnInit {
-
 
   workingStatusOpt = [
     { id: 18, name: "עצמאית" },
@@ -58,12 +59,18 @@ export class FindUsersComponent implements OnInit {
   user!: User;
 
   event!: LazyLoadEvent;
-  constructor(private _aaa: User_Service, private primengConfig: PrimeNGConfig, public dialog: MatDialog,public datepipe: DatePipe) {
+  constructor(private _user: User_Service,
+    private _roomB: Room_booking_Service,
+    private primengConfig: PrimeNGConfig,
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService,
+    public dialog: MatDialog,
+    public datepipe: DatePipe) {
 
     //  this.d[0]=new Date('2022-03-06T14:00:42.784Z');
     //  this.d[1]=new Date('2022-03-06T14:00:42.784Z')
   }
-;
+  ;
 
   openRoomBookingsDialog(): void {
     const RBdialogRef = this.dialog.open(DialogRoomBookingsComponent, {
@@ -75,25 +82,29 @@ export class FindUsersComponent implements OnInit {
     });
 
 
-  RBdialogRef.afterClosed().subscribe(result => {
+    RBdialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
   }
 
-    openUserDetailsDialog(): void {
-      const UDdialogRef = this.dialog.open(DialogUserDetailsComponent, {
-        width: '50%',
-        height: '50%',
-        data: {
-          user: this.user
-        },
-      });
-  
-UDdialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+  openUserDetailsDialog(): void {
+    const UDdialogRef = this.dialog.open(DialogUserDetailsComponent, {
+      width: '50%',
+      height: '50%',
+      data: {
+        user: this.user
+      },
+    });
+
+    UDdialogRef.afterClosed().subscribe(result => {
+
+      this.datasource[this.datasource.findIndex(x => x.idNumber == this.user.idNumber)] = result;
+      this.datasource = this.datasource;
+      this.lazyData = this.datasource;
+      this.customers = this.datasource.slice(0, (2 + 3));
     });
   }
-  
+
 
   ngOnInit(): void {
 
@@ -105,23 +116,15 @@ UDdialogRef.afterClosed().subscribe(result => {
       filter_lName: new FormControl()
     })
 
-
-    // this._aaa.gettUsers(this.sedate).subscribe(data=>{ this.users = data;})
-
-    //     this.statuses = [
-    //         {label: 'INSTOCK', value: 'instock'},
-    //         {label: 'LOWSTOCK', value: 'lowstock'},
-    //         {label: 'OUTOFSTOCK', value: 'outofstock'}
-    //     ];
   }
 
   func() {
-   
+
     let data = this.user_roomb_details.value;
-    data.s_date =this.datepipe.transform(data.s_date, 'yyyy-MM-dd');
-    data.e_date=this.datepipe.transform(data.e_date, 'yyyy-MM-dd');
-    
-    this._aaa.whatever(data.s_date, data.e_date)
+    data.s_date = this.datepipe.transform(data.s_date, 'yyyy-MM-dd');
+    data.e_date = this.datepipe.transform(data.e_date, 'yyyy-MM-dd');
+
+    this._user.whatever(data.s_date, data.e_date)
       .subscribe(data => {
 
         this.datasource = data;
@@ -142,9 +145,9 @@ UDdialogRef.afterClosed().subscribe(result => {
     //in a real application, make a remote request to load data using state metadata from event
     //event.first = 0;
     //event.rows = 1;
-    // event.sortField = this.datasource[0].firstName;
-    // event.sortOrder=1;
-    // filters:{this.datasource[0].firstName:} //FilterMetadata object having field as key and filter value, filter matchMode as value
+    //  event.sortField = this.datasource[0].firstName;
+    //  event.sortOrder=1;
+    //  filters:{this.datasource[0].firstName;} //FilterMetadata object having field as key and filter value, filter matchMode as value
 
     //imitate db connection over a network
 
@@ -275,15 +278,28 @@ UDdialogRef.afterClosed().subscribe(result => {
     this.openRoomBookingsDialog();
   }
 
-  openUserDialog(user: User){
+  openUserDialog(user: User) {
     this.user = user;
     this.openUserDetailsDialog();
   }
 
-  DeleteUser(idNumber: string){
-    alert("למצוא את ההודעה שאישורה תמחוק את היוזר וביטולה לא");
-  }
+  DeleteUser(idNumber: string) {
+    //  alert("למצוא את ההודעה שאישורה תמחוק את היוזר וביטולה לא");
 
+    this.confirmationService.confirm({
+      message: ' האם אתה בטוח שברצונך למחוק אותה? ',
+      header: 'Confirm',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        alert("accept");
+        this._roomB.deleteRb(idNumber);
+        this.datasource = this.datasource.filter(x => x.idNumber != idNumber);
+        // this.products = this.products.filter(val => !this.selectedProducts.includes(val));
+        // this.selectedProducts = null;
+        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
+      }
+    });
+  }
 
 
 

@@ -1,6 +1,4 @@
 import { Byte } from "@angular/compiler/src/util";
-import { Marriage_status } from "./marriage_status.enum";
-import { Working_status } from "./working_status.enum";
 
 export class User{
     id:number=0;

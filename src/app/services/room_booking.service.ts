@@ -58,7 +58,7 @@ export class Room_booking_Service {
         return this._http.put("api/RoomBooking", lrb);
     }
 
-    deleteRb(id: number) {
+    deleteRb(id: string) {
         return this._http.delete("api/RoomBooking/" + id);
     }
 }

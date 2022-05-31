@@ -2,7 +2,7 @@ import { getLocaleNumberFormat } from '@angular/common';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
 import { fingerprint } from '@angular/compiler/src/i18n/digest';
 import { Byte } from '@angular/compiler/src/util';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { __spreadArray } from 'tslib';
 //import { Marriage_status } from '../models/marriage_status.enum';
@@ -14,6 +14,8 @@ import { FormGroupDirective, NgForm } from '@angular/forms';
 import { Room_booking_Service } from '../services/room_booking.service';
 import { NullVisitor } from '@angular/compiler/src/render3/r3_ast';
 import { dateInputsHaveChanged } from '@angular/material/datepicker/datepicker-input-base';
+import { Base_code } from '../models/base_code.model';
+import { Room_Service } from '../services/room.service';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -32,17 +34,17 @@ export class UserDetailsComponent implements OnInit {
 
   @Input()
   userDialog!: User;
+  @Output() myOutput: EventEmitter<User> = new EventEmitter();
 
   // work = Working_status;
   user_details_f!: FormGroup;
-  fromDialog:boolean = true;
+  fromDialog: boolean = false;
   //idMarriageStatus: typeof Marriage_status=Marriage_status;
   matcher = new MyErrorStateMatcher();
 
   constructor(private _user: User_Service, private _roomB: Room_booking_Service) {
     //this.user.permanentWorker=false;
   }
-
 
   ngOnInit(): void {
     this.user_details_f = new FormGroup({
@@ -56,15 +58,19 @@ export class UserDetailsComponent implements OnInit {
       occupation: new FormControl(),
       permanentWorker: new FormControl(),
       //fingerprint: new FormControl()
+
     })
 
-    if(this.userDialog){
-        this.user_details_f.controls['idNumber'].setValue(this.userDialog.idNumber);
-        this.fillUp(this.userDialog);
-        this.fromDialog=false;
+  
+
+    if (this.userDialog) {
+      this.user_details_f.controls['idNumber'].setValue(this.userDialog.idNumber);
+      this.fillUp(this.userDialog);
+      this.fromDialog = true;
+      this.flag_add_edit = true;
     }
     else
-    this.fromDialog=true;
+      this.fromDialog = true;
   }
 
   workingStatusOpt = [
@@ -77,6 +83,7 @@ export class UserDetailsComponent implements OnInit {
     { id: 13, name: "נשואה" },
     { id: 14, name: "רווקה" },
   ];
+  
 
   flag_permanent: Boolean = false;
   user!: User;
@@ -106,6 +113,9 @@ export class UserDetailsComponent implements OnInit {
   // }
 
   clear() {
+    if (this.fromDialog)
+      this.myOutput.emit(this.user);
+
     this.user_details_f.controls["firstName"].setValue("");
     this.user_details_f.controls["lastName"].setValue("");
     this.user_details_f.controls["mail"].setValue("");
@@ -122,34 +132,42 @@ export class UserDetailsComponent implements OnInit {
   }
 
   add_user() {
-    this.flag_required = true;
-    this.user = this.user_details_f.value;
-    //this.user.fingerprint=this.f_print;
-    //this.converting_status();
-    // if(this.user.fingerprint==null)
-    //   alert("שימי לב- לא הוכנסה טביעת אצבע")
-    this._user.postUser(this.user)
-      .subscribe(data => {
-        if (data == null) alert(this.user.firstName + " " + this.user.lastName + " התווספה בהצלחה!");
-        this.clear();
-        this.user_details_f.controls["idNumber"].setValue("");//למה?
-      });
+    if (!this.validAllFull())
+      alert("נא מלאו את כל הפרטים")
+    else {
+      this.flag_required = true;
+      this.user = this.user_details_f.value;
+      //this.user.fingerprint=this.f_print;
+      //this.converting_status();
+      // if(this.user.fingerprint==null)
+      //   alert("שימי לב- לא הוכנסה טביעת אצבע")
+      this._user.postUser(this.user)
+        .subscribe(data => {
+          if (data == null) alert(this.user.firstName + " " + this.user.lastName + " התווספה בהצלחה!");
+          this.clear();
+          this.user_details_f.controls["idNumber"].setValue("");//למה?
+        });
+    }
   }
 
   update_user() {
-    this.flag_required = true;
-    //let id=this.user.id;
-    this.user = this.user_details_f.value;
-    // this.user.id=id;
-    //this.converting_status();
-    // if(this.user.fingerprint==null)
-    //   alert("שימי לב- לא הוכנסה טביעת אצבע")
-    this._user.putUser(this.user)
-      .subscribe(data => {
-        alert(this.user.firstName + " " + this.user.lastName + " התעדכנה בהצלחה!");
-        this.clear();
-        this.user_details_f.controls["idNumber"].setValue("");
-      });
+    if (!this.validAllFull())
+      alert("נא מלאו את כל הפרטים")
+    else {
+      this.flag_required = true;
+      //let id=this.user.id;
+      this.user = this.user_details_f.value;
+      // this.user.id=id;
+      //this.converting_status();
+      // if(this.user.fingerprint==null)
+      //   alert("שימי לב- לא הוכנסה טביעת אצבע")
+      this._user.putUser(this.user)
+        .subscribe(data => {
+          alert(this.user.firstName + " " + this.user.lastName + " התעדכנה בהצלחה!");
+          this.clear();
+          this.user_details_f.controls["idNumber"].setValue("");
+        });
+    }
   }
 
   check_if_user_exists(id: string) {
@@ -182,8 +200,7 @@ export class UserDetailsComponent implements OnInit {
       })
   }
 
-
-  fillUp(user:User){
+  fillUp(user: User) {
     this.user_details_f.controls["firstName"].setValue(user.firstName);
     this.user_details_f.controls["lastName"].setValue(user.lastName);
     this.user_details_f.controls["mail"].setValue(user.mail);
@@ -204,5 +221,15 @@ export class UserDetailsComponent implements OnInit {
   //     this._roomB.setRBookings(x);
   //   })
   // }
+  validAllFull() {
+
+    if (this.user_details_f.controls["firstName"].value &&
+      this.user_details_f.controls["lastName"].value &&
+      this.user_details_f.controls["phone"].value &&
+      this.user_details_f.controls["marriageStatus"].value &&
+      this.user_details_f.controls["workingStatus"].value)
+      return true;
+    return false;
+  }
 
 }

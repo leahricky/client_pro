@@ -6,7 +6,7 @@ import {  ReactiveFormsModule } from '@angular/forms';
 import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import { FindUsersComponent } from '../find-users/find-users.component';
 import {AccordionModule} from 'primeng/accordion';     //accordion and accordion tab
-import {MenuItem} from 'primeng/api';
+import {ConfirmationService, MenuItem, MessageService} from 'primeng/api';
 import {TableModule} from 'primeng/table';
 import {ToastModule} from 'primeng/toast';
 import {CalendarModule} from 'primeng/calendar';
@@ -52,7 +52,7 @@ import { UserDetailsComponent } from '../user-details/user-details.component';
      
   ],
   exports:[FindUsersComponent,CreateRoomComponent],
-  providers:[Room_Service]
+  providers:[Room_Service,MessageService,ConfirmationService]
 })
 export class RoomModule {
 

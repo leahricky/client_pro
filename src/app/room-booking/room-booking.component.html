@@ -11,8 +11,8 @@
 
                         <mat-form-field class="example-full-width" appearance="fill">
                             <mat-label>סוג החדר</mat-label>
-                            <mat-select formControlName="roomType" [errorStateMatcher]="matcher">
-                                <mat-option *ngFor="let type of types" [value]="type.id">
+                            <mat-select formControlName="roomType" [errorStateMatcher]="matcher" (valueChange)="showTypeNames()">
+                                <mat-option *ngFor="let type of types" [value]="type.name">
                                     {{type.name}}
                                 </mat-option>
                             </mat-select>
@@ -28,8 +28,8 @@
                         <mat-form-field class="example-full-width" appearance="fill">
                             <mat-label>שם החדר</mat-label>
                             <mat-select formControlName="roomName" [errorStateMatcher]="matcher">
-                                <mat-option *ngFor="let rName of rNames" [value]="rName.id">
-                                    {{rName.description}}
+                                <mat-option *ngFor="let rName of RoomNamesToSelect" [value]="rName">
+                                    {{rName}}
                                 </mat-option>
                             </mat-select>
                             <mat-error *ngIf="roomb_details.hasError('required')">
