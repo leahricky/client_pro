@@ -61,7 +61,6 @@ export class UserDetailsComponent implements OnInit {
 
     })
 
-  
 
     if (this.userDialog) {
       this.user_details_f.controls['idNumber'].setValue(this.userDialog.idNumber);
@@ -70,7 +69,7 @@ export class UserDetailsComponent implements OnInit {
       this.flag_add_edit = true;
     }
     else
-      this.fromDialog = true;
+      this.fromDialog = false;
   }
 
   workingStatusOpt = [
@@ -85,19 +84,19 @@ export class UserDetailsComponent implements OnInit {
   ];
   
 
-  flag_permanent: Boolean = false;
+  //flag_permanent: Boolean = false;
   user!: User;
   flag_add_edit: Boolean = false;
   flag_required: Boolean = false;
   f_print: Byte[] = [];
   path: string = "fprint";
 
-  change() {
-    if (this.flag_permanent == true)
-      this.flag_permanent = false;
-    else
-      this.flag_permanent = true;
-  }
+  // change() {
+  //   if (this.flag_permanent == true)
+  //     this.flag_permanent = false;
+  //   else
+  //     this.flag_permanent = true;
+  // }
 
   // converting_status() {
   //   if (this.user.idMarriageStatus == 0)
@@ -125,9 +124,9 @@ export class UserDetailsComponent implements OnInit {
     this.user_details_f.controls["occupation"].setValue("");
     this.user_details_f.controls["permanentWorker"].setValue(false);
     //this.user_details_f.controls["fingerprint"].setValue("/assets/x.png");
-    this.path = "fprint";
+    //this.path = "fprint";
     this.flag_add_edit = false;
-    this.flag_permanent = true;
+    //this.flag_permanent = true;
     this.flag_required = false;
   }
 
@@ -190,8 +189,8 @@ export class UserDetailsComponent implements OnInit {
           // // else
           // //   this.path="x";
           this.flag_add_edit = true;
-          if (this.user.permanentWorker == false)
-            this.flag_permanent = false;
+          // if (this.user.permanentWorker == false)
+          //   this.flag_permanent = false;
           this._roomB.setRBookings(x);
         }
         else {

@@ -52,14 +52,14 @@ export class RoomBookingComponent implements OnInit {
     { id: 7, name: "עמדת מחשב" }
   ];
 
-  computerRoomTypeNames!:string[];
-  computerTypeNames!: string[];
-  meetingRoomTypeNames!: string[];
+  computerRoomTypeNames: string[]=[];
+  computerTypeNames: string[]=[];
+  meetingRoomTypeNames: string[]=[];
 
-  typeNames = new Map<string, string[]>([
-    ["חדר מחשבים",this.computerRoomTypeNames],
-    ["עמדת מחשב",this.computerTypeNames],
-    ["חדר ישיבות",this.meetingRoomTypeNames]
+  typeNames = new Map<number, string[]>([
+    [5, this.meetingRoomTypeNames],
+    [6, this.computerRoomTypeNames],
+    [7, this.computerTypeNames]
   ]);
 
   RoomNamesToSelect?: string[];
@@ -109,25 +109,25 @@ export class RoomBookingComponent implements OnInit {
       e_hour: new FormControl()
     })
 
-    this.RoomNamesToSelect = new String[]();
-      //מילוי מערכי שמות החדרים
-      for (let entry of this.typeNames.entries()){
-        this._room.getroom_by_type(String(entry[0])).subscribe(y=>{
-          y.forEach(r=>{
-            if(r)
-             entry[1].push(r.name);
-          })
+    this.RoomNamesToSelect = [];
+    
+    //מילוי מערכי שמות החדרים
+    for (let entry of this.typeNames.entries()) {
+      this._room.getroom_by_type(entry[0]).subscribe(y => {
+        y.forEach(r => {
+          entry[1].push(r.name);
+        })
       })
-      }
+    }
     //this.rBookings = this._roomB.getRBookings();
   }
 
-  
+
   day(d: Base_code) {
 
     //לשנות
-    this.rBookings = this._roomB.getRBookings();
-    this.fillRBookings();
+    // this.rBookings = this._roomB.getRBookings();
+    // this.fillRBookings();
 
     this.d = d.id;
 
@@ -139,7 +139,7 @@ export class RoomBookingComponent implements OnInit {
       this.dateTimeSelected[d.id - 1] = {
         id: 0,
         idUser: this._userService.getCurrentUser().idNumber,
-        roomName: this.roomb_details.controls["roomType"].value,
+        roomName: this.roomb_details.controls["roomName"].value,
         startDateTime: new Date(sd),
         endDateTime: new Date(ed),
         timeDeviation: 15
@@ -216,10 +216,7 @@ export class RoomBookingComponent implements OnInit {
       // element.start_hour=this.roomb_details.controls["s_hour"].value();
       // element.end_hour=this.roomb_details.controls["e_hour"].value();
 
-
-
-      element.roomName = "לובי";
-
+    //  element.roomName = "לובי";
 
       //element.end_date=Date.now();
       //let pos =this.dayon.indexOf(true);
@@ -227,8 +224,10 @@ export class RoomBookingComponent implements OnInit {
       //element.end_hour=element.end_hour.getTime()
       this._roomB.postRb(element).subscribe(id => {
         let dayr = new Day_room_booking(pos, id);
-        this._roomB.postday(dayr).subscribe();
-        alert("החדר נשמר בהצלחה=")
+        this._roomB.postday(dayr).subscribe(rs=>{
+            alert("יום ההזמנה נשמר בהצלחה=")
+        });
+      
         //רק צריכות לסדר בסרבר את האיידי של טבלת הימים 
         //הוא מתמלא רק שורה אחת
       })
@@ -256,7 +255,7 @@ export class RoomBookingComponent implements OnInit {
   validAllFull() {
 
     if (this.roomb_details.controls['roomType'].value &&
-      this.roomb_details.controls['roomName'].value&&
+      this.roomb_details.controls['roomName'].value &&
       this.roomb_details.controls['s_date'].value &&
       this.roomb_details.controls['e_date'].value &&
       this.roomb_details.controls['s_hour'].value &&
@@ -267,7 +266,7 @@ export class RoomBookingComponent implements OnInit {
 
   fillRBookings() {
     let t = new Date();
-    t.setHours(0,0,0,0);
+    t.setHours(0, 0, 0, 0);
     let DayRBooking;
     this.rBookingObj = [];
 
@@ -283,9 +282,9 @@ export class RoomBookingComponent implements OnInit {
         if (!this.rBookingObj[0]) {
           let obj: RoomBookingForClient = new RoomBookingForClient();
           var x1 = this.datepipe.transform(el.startDateTime, 'yyyy-MM-dd');
-          obj.sDate = new Date(x1+' '+t);
+          obj.sDate = new Date(x1 + ' ' + t);
           var x2 = this.datepipe.transform(el.endDateTime, 'yyyy-MM-dd');
-          obj.eDate = new Date(x2+' '+t);
+          obj.eDate = new Date(x2 + ' ' + t);
           obj.roomName = el.roomName
           obj.DayHours = [];
           obj.DayHours.push(forArray);
@@ -295,8 +294,8 @@ export class RoomBookingComponent implements OnInit {
         else {
           this.rBookingObj.find(rB => {
 
-            if (rB.sDate ==new Date(x1+' '+t)  &&
-              rB.eDate == new Date(x2+' '+t) &&
+            if (rB.sDate == new Date(x1 + ' ' + t) &&
+              rB.eDate == new Date(x2 + ' ' + t) &&
               rB.roomName == el.roomName) {
               rB.DayHours.push(forArray);
             }
@@ -323,8 +322,7 @@ export class RoomBookingComponent implements OnInit {
     })
   }
 
-  showTypeNames(){
-
-    this.RoomNamesToSelect =  this.typeNames.get(this.roomb_details.controls['roomName'].value);
+  showTypeNames() {
+    this.RoomNamesToSelect = this.typeNames.get(this.roomb_details.controls['roomType'].value);
   }
 } 

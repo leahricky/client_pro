@@ -18,6 +18,7 @@ import { getMatScrollStrategyAlreadyAttachedError } from '@angular/cdk/overlay/s
 import { Room_booking_Service } from '../services/room_booking.service';
 
 
+
 export interface DialogUserIdData {
   user: User;
 }
@@ -26,8 +27,14 @@ export interface DialogUserIdData {
   selector: 'app-find-users',
   templateUrl: './find-users.component.html',
   styleUrls: ['./find-users.component.css'],
-  //encapsulation: ViewEncapsulation.None
-
+  encapsulation: ViewEncapsulation.None
+  // styles: [`
+  //       :host ::ng-deep .p-dialog .product-image {
+  //           width: 150px;
+  //           margin: 0 auto 2rem auto;
+  //           display: block;
+  //       }
+  //   `],
 })
 export class FindUsersComponent implements OnInit {
 
@@ -81,7 +88,6 @@ export class FindUsersComponent implements OnInit {
       },
     });
 
-
     RBdialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
@@ -98,10 +104,12 @@ export class FindUsersComponent implements OnInit {
 
     UDdialogRef.afterClosed().subscribe(result => {
 
-      this.datasource[this.datasource.findIndex(x => x.idNumber == this.user.idNumber)] = result;
-      this.datasource = this.datasource;
-      this.lazyData = this.datasource;
-      this.customers = this.datasource.slice(0, (2 + 3));
+      if (result) {
+        this.datasource[this.datasource.findIndex(x => x.idNumber == this.user.idNumber)] = result;
+        this.datasource = this.datasource;
+        this.lazyData = this.datasource;
+        this.customers = this.datasource.slice(0, (2 + 3));
+      }
     });
   }
 
@@ -273,7 +281,6 @@ export class FindUsersComponent implements OnInit {
   }
 
   getRBs(user: User) {
-
     this.user = user;
     this.openRoomBookingsDialog();
   }
@@ -283,20 +290,21 @@ export class FindUsersComponent implements OnInit {
     this.openUserDetailsDialog();
   }
 
-  DeleteUser(idNumber: string) {
-    //  alert("למצוא את ההודעה שאישורה תמחוק את היוזר וביטולה לא");
+  DeleteUser(user: User) {
 
     this.confirmationService.confirm({
-      message: ' האם אתה בטוח שברצונך למחוק אותה? ',
-      header: 'Confirm',
+      message: ' האם את בטוחה שברצונך למחוק את ' + user.firstName + ' ' + user.lastName + ' ? ',
+      header: 'שימי לב',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        alert("accept");
-        this._roomB.deleteRb(idNumber);
-        this.datasource = this.datasource.filter(x => x.idNumber != idNumber);
-        // this.products = this.products.filter(val => !this.selectedProducts.includes(val));
-        // this.selectedProducts = null;
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
+        this._roomB.deleteRb(user.idNumber).subscribe(res => {
+          this.datasource = this.datasource.filter(x => x.idNumber != user.idNumber);
+          this.lazyData = this.datasource;
+          this.customers = this.datasource.slice(0, (2 + 3));
+
+          this.messageService.add({ severity: 'success', summary: 'Successful', detail: user.firstName + ' ' + user.lastName + ' נמחקה ', life: 3000 });
+        });
+
       }
     });
   }

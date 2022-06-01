@@ -59,6 +59,6 @@ export class Room_booking_Service {
     }
 
     deleteRb(id: string) {
-        return this._http.delete("api/RoomBooking/" + id);
+        return this._http.delete("api/RoomBooking/" +id);
     }
 }

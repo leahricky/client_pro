@@ -18,8 +18,8 @@ export class Room_Service{
         return this._http.get<Room>("api/room/name/"+name);
     }
 
-    getroom_by_type(room_type: string):Observable<Room[]> {
-        return this._http.get<Room[]>("api/room/room_type/"+room_type);
+    getroom_by_type(IdRoomType: number):Observable<Room[]> {
+        return this._http.get<Room[]>("api/room/IdRoomType/"+IdRoomType);
     }
     
     postRoom(room: Room) {

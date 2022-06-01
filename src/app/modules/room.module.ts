@@ -29,6 +29,13 @@ import { FormsModule } from '@angular/forms';
 import { MaterialModule } from './material.module';
 import { Routes } from '@angular/router';
 import { UserDetailsComponent } from '../user-details/user-details.component';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+
+import { BrowserModule } from '@angular/platform-browser';
+import {BrowserAnimationsModule} 
+      from '@angular/platform-browser/animations';
+  
+  
 
 
 @NgModule({
@@ -48,7 +55,10 @@ import { UserDetailsComponent } from '../user-details/user-details.component';
      ProgressBarModule,
      UserModule,
      MatDialogModule,
-     MaterialModule
+     MaterialModule,
+     ConfirmDialogModule,
+     BrowserModule,
+     BrowserAnimationsModule
      
   ],
   exports:[FindUsersComponent,CreateRoomComponent],

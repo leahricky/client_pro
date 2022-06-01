@@ -50,12 +50,14 @@ export class AvailabilityComponent implements OnInit {
       //לאפס את הכנסת התאריכים ע"י הפרטים שהמשתמש הכניס?!
       this.order_details.controls['sDateTime'].setValue(this.details[0].sDateTime);
       this.order_details.controls['eDateTime'].setValue(this.details[0].eDateTime);
+     // this.order_details.controls['type'].setValue(String(this.details[0].type));
       this.check_availability();
     }
   }
 
   check_availability() {
 
+    console.log("check_availability()")
     //אם לא הגיע ע"י הדיאלוג
     if (!this.details) {
       this.details = [];

@@ -42,7 +42,8 @@
             <!-- עובד קבוע -->
             <div id="permanent" class="example-full-width">
               <label for="exampleInputUsername"> :עובדת קבועה </label>
-              <input type="checkbox" formControlName="permanentWorker" id="permanent" (click)="change()">
+              <input type="checkbox" formControlName="permanentWorker" id="permanent" >
+              <!-- (click)="change()"> -->
             </div>
 
 
@@ -200,7 +201,7 @@
 
 
 <!-- לטפל!!!!!! -->
-<div *ngIf="flag_permanent == false || fromDialog == false" > 
+<div *ngIf="fromDialog == false" > 
   <!-- //</div>style="position:absolute; left:20%"> -->
   <app-room-booking></app-room-booking>
 </div>
