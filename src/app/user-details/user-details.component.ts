@@ -16,6 +16,8 @@ import { NullVisitor } from '@angular/compiler/src/render3/r3_ast';
 import { dateInputsHaveChanged } from '@angular/material/datepicker/datepicker-input-base';
 import { Base_code } from '../models/base_code.model';
 import { Room_Service } from '../services/room.service';
+import { MessageService, PrimeNGConfig } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -42,7 +44,13 @@ export class UserDetailsComponent implements OnInit {
   //idMarriageStatus: typeof Marriage_status=Marriage_status;
   matcher = new MyErrorStateMatcher();
 
-  constructor(private _user: User_Service, private _roomB: Room_booking_Service) {
+  constructor(private _user: User_Service,
+     private _roomB: Room_booking_Service, 
+       private messageService: MessageService,
+        private primengConfig: PrimeNGConfig,
+        private confirmationService: ConfirmationService
+
+    ) {
     //this.user.permanentWorker=false;
   }
 
@@ -132,7 +140,8 @@ export class UserDetailsComponent implements OnInit {
 
   add_user() {
     if (!this.validAllFull())
-      alert("נא מלאו את כל הפרטים")
+    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'נא מלאו את כל הפרטים', life: 3000 });
+     // alert("נא מלאו את כל הפרטים")
     else {
       this.flag_required = true;
       this.user = this.user_details_f.value;
@@ -191,7 +200,9 @@ export class UserDetailsComponent implements OnInit {
           this.flag_add_edit = true;
           // if (this.user.permanentWorker == false)
           //   this.flag_permanent = false;
-          this._roomB.setRBookings(x);
+
+          //לשנותתת
+          //this._roomB.setRBookings(x);
         }
         else {
           this.clear();

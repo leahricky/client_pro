@@ -40,6 +40,8 @@ export class CreateRoomComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
+      if(this.d)
+        this.d.style.backgroundColor ="unset";
       // this.animal = result;
     });
   }
@@ -50,19 +52,24 @@ export class CreateRoomComponent implements OnInit {
   addPoints(pos: MouseEvent) {
 
     //let map = document.getElementById('map');
-
+    let map = document.getElementById("map")
     if (this.action) {
-
-      this.room.xStartPoint = pos.offsetX;//- map!.offsetTop;
-      this.room.yStartPoint = pos.offsetY;// - map!.offsetTop;
+      // var x = evt.pageX - $('#map').offset().left;
+      // var y = evt.pageY - $('#map').offset().top;
+      if (map) {
+        this.room.xStartPoint = pos.pageX - map.offsetLeft;
+        this.room.yStartPoint = pos.pageY - map.offsetTop;
+      }
       console.log("s: " + this.room.xStartPoint, this.room.yStartPoint)
       this.action = false;
 
     }
 
     else {
-      this.room.xEndPoint = pos.offsetX;//- map!.clientTop;
-      this.room.yEndPoint = pos.offsetY;//- map!.clientTop;
+      if (map) {
+        this.room.xEndPoint = pos.pageX - map.offsetLeft;
+        this.room.yEndPoint = pos.pageY - map.offsetTop;
+      }
       console.log("e: " + this.room.xStartPoint, this.room.yEndPoint)
       this.action = true;
 
@@ -76,13 +83,13 @@ export class CreateRoomComponent implements OnInit {
     let map = document.getElementById('map');
 
     this.d = document.getElementById("div");
-    if (this.d) {
+    if (this.d&&map) {
       this.d.style.position = "absolute";
       //נכון?
-      this.d.style.left = this.room.xStartPoint + "px";
-      this.d.style.top =  this.room.yStartPoint + "px";
+      this.d.style.left = this.room.xStartPoint+map.offsetLeft + "px";
+      this.d.style.top = this.room.yStartPoint +map.offsetTop+ "px";
       this.d.style.width = this.room.xEndPoint - this.room.xStartPoint + "px";
-      this.d.style.height = this.room.yEndPoint - this.room.yStartPoint + "px";
+      this.d.style.height = this.room.yEndPoint - this.room.yStartPoint+ "px";
       this.d.style.backgroundColor = "red";
     }
   }

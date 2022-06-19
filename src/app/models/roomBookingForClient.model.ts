@@ -3,9 +3,9 @@ import { daySHourEHour } from "./daySHourEHour.model";
 
 export class RoomBookingForClient{
 
-    sDate!:Date;
-    eDate!:Date;
-    roomType!:number;
+    startDate!:Date;
+    endDate!:Date;
     roomName!:string;
-    DayHours!:daySHourEHour[];
+    idUser!:string;
+    days!:daySHourEHour[];
 }

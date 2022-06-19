@@ -21,6 +21,7 @@ import { DialogCreateRoomComponent } from './dialog-create-room/dialog-create-ro
 import { DialogAvailabilityComponent } from './dialog-availability/dialog-availability.component';
 import { DialogRoomBookingsComponent } from './dialog-room-bookings/dialog-room-bookings.component';
 import { DialogUserDetailsComponent } from './dialog-user-details/dialog-user-details.component';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 const ROUTES: Routes = [
   { path: "user", component: UserDetailsComponent },
@@ -46,7 +47,7 @@ const ROUTES: Routes = [
     MaterialModule
   ],
   exports: [AvailabilityComponent, DialogCreateRoomComponent],
-  providers: [Room_booking_Service,Room_Service],
+  providers: [Room_booking_Service,Room_Service,MessageService,ConfirmationService],
   bootstrap: [AppComponent]
 })
 

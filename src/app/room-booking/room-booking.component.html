@@ -139,51 +139,99 @@
 
 
 
-
             <!-- <button *ngif="">הוספה</button>
         <button *ngif="">עדכון</button> -->
 
         </div>
-
-
     </form>
 
 </div>
-<div style="position:absolute;top:55%;left:6%">
-    <form *ngFor="let rB of rBs">
+<div style="position:absolute;top:90%;left:5%">
+    <!-- <form *ngFor="let rB of rBs">
         <mat-list>
             <mat-list-item id="name">שם החדר: {{rB.roomName}}</mat-list-item>
             <mat-divider></mat-divider>
             <mat-list-item>
                 <table>
                     <tr>
-                        <td id="sDate">מתאריך: {{rB.sDate | date:'yyyy-MM-dd'}}</td>
-                        <td id="eDate">-------------------עד תאריך: {{rB.eDate | date:'yyyy-MM-dd'}}</td>
+                        <td id="sDate">מתאריך: {{rB.startDate | date:'yyyy-MM-dd'}}</td>
+                        <td id="eDate">-------------------עד תאריך: {{rB.endDate | date:'yyyy-MM-dd'}}</td>
                     </tr>
                 </table>
             </mat-list-item>
             <mat-divider></mat-divider>
             <mat-list-item>
-                <div *ngFor="let t of rB.DayHours">
+                <div *ngFor="let d of rB.days">
                     <table>
                         <tr>
                             <td></td>
-                            <td>{{t.day}}</td>
+                            <td>{{d.day}}</td>
 
                         </tr>
                         <tr>
                             <td>שעת התחלה</td>
-                            <td>{{t.sHour | date:'hh:mm:ss'}}</td>
+                            <td>{{d.sHour | date:'hh:mm:ss'}}</td>
                         </tr>
                         <tr>
                             <td>שעת סיום</td>
-                            <td>{{t.eHour | date:'hh:mm:ss'}}</td>
+                            <td>{{d.eHour | date:'hh:mm:ss'}}</td>
                         </tr>
 
                     </table>
                 </div>
 
             </mat-list-item>
+            <mat-divider></mat-divider>
         </mat-list>
-    </form>
+    </form> -->
+
+
+
+    <div class="container-fluid" style="background-color:#e8e8e8">
+        <div class="container container-pad" id="property-listings">
+            
+            
+            <div class="row">
+                <div class="col-sm-6"> 
+
+                    <!-- Begin Listing: 609 W GRAVERS LN-->
+                    <div class="brdr bgc-fff pad-10 box-shad btm-mrg-20 property-listing" *ngFor="let rB of rBs">
+                        <mat-list>
+                            <mat-list-item id="name">שם החדר: {{rB.roomName}}</mat-list-item>
+                            <mat-divider></mat-divider>
+                            <mat-list-item>
+                                <table>
+                                    <tr>
+                                        <td id="sDate">מתאריך: {{rB.startDate | date:'yyyy-MM-dd'}}</td>
+                                        <td id="eDate">-------------------    עד תאריך: {{rB.endDate | date:'yyyy-MM-dd'}}</td>
+                                    </tr>
+                                </table>
+                            </mat-list-item>
+                            <mat-divider></mat-divider>
+                            <mat-list-item>
+                                <div *ngFor="let d of rB.days">
+                                    <table>
+                                        <tr>
+                                            <td></td>
+                                            <td>{{d.day}}</td>
+                
+                                        </tr>
+                                        <tr>
+                                            <td>שעת התחלה</td>
+                                            <td>{{d.sHour | date:'hh:mm:ss'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>שעת סיום</td>
+                                            <td>{{d.eHour | date:'hh:mm:ss'}}</td>
+                                        </tr>
+                
+                                    </table>
+                                </div>
+                
+                            </mat-list-item>
+                            <mat-divider></mat-divider>
+                        </mat-list>
+                      
+                    </div><!-- End Listing-->
+
 </div>

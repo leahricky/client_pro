@@ -52,9 +52,9 @@ export class RoomBookingComponent implements OnInit {
     { id: 7, name: "עמדת מחשב" }
   ];
 
-  computerRoomTypeNames: string[]=[];
-  computerTypeNames: string[]=[];
-  meetingRoomTypeNames: string[]=[];
+  computerRoomTypeNames: string[] = [];
+  computerTypeNames: string[] = [];
+  meetingRoomTypeNames: string[] = [];
 
   typeNames = new Map<number, string[]>([
     [5, this.meetingRoomTypeNames],
@@ -80,6 +80,8 @@ export class RoomBookingComponent implements OnInit {
   details: DateTimeType[] = [];
 
   dateTimeSelected: Room_booking[] = [];
+
+ // userRbs :RoomBookingForClient[]=[];
   constructor(private _userService: User_Service, private _roomB: Room_booking_Service, private _room: Room_Service, public dialog: MatDialog, public datepipe: DatePipe) { }
 
 
@@ -101,8 +103,8 @@ export class RoomBookingComponent implements OnInit {
   ngOnInit(): void {
     this.user = this._userService.getCurrentUser();
     this.roomb_details = new FormGroup({
-      roomType: new FormControl('valid', Validators.required),
-      roomName: new FormControl('valid', Validators.required),
+      roomType: new FormControl(Validators.required),
+      roomName: new FormControl(),
       s_date: new FormControl(),
       e_date: new FormControl(),
       s_hour: new FormControl(),
@@ -110,7 +112,7 @@ export class RoomBookingComponent implements OnInit {
     })
 
     this.RoomNamesToSelect = [];
-    
+
     //מילוי מערכי שמות החדרים
     for (let entry of this.typeNames.entries()) {
       this._room.getroom_by_type(entry[0]).subscribe(y => {
@@ -126,8 +128,8 @@ export class RoomBookingComponent implements OnInit {
   day(d: Base_code) {
 
     //לשנות
-    // this.rBookings = this._roomB.getRBookings();
-    // this.fillRBookings();
+    //this.rBookings = this._roomB.getRBookings();
+    this.fillRBookings();
 
     this.d = d.id;
 
@@ -216,7 +218,7 @@ export class RoomBookingComponent implements OnInit {
       // element.start_hour=this.roomb_details.controls["s_hour"].value();
       // element.end_hour=this.roomb_details.controls["e_hour"].value();
 
-    //  element.roomName = "לובי";
+      //  element.roomName = "לובי";
 
       //element.end_date=Date.now();
       //let pos =this.dayon.indexOf(true);
@@ -224,10 +226,10 @@ export class RoomBookingComponent implements OnInit {
       //element.end_hour=element.end_hour.getTime()
       this._roomB.postRb(element).subscribe(id => {
         let dayr = new Day_room_booking(pos, id);
-        this._roomB.postday(dayr).subscribe(rs=>{
-            alert("יום ההזמנה נשמר בהצלחה=")
+        this._roomB.postday(dayr).subscribe(rs => {
+          alert("יום ההזמנה נשמר בהצלחה=")
         });
-      
+
         //רק צריכות לסדר בסרבר את האיידי של טבלת הימים 
         //הוא מתמלא רק שורה אחת
       })
@@ -264,63 +266,87 @@ export class RoomBookingComponent implements OnInit {
     return false;
   }
 
+dEmpty:Date=new Date();
+dNow:Date=new Date(Date.now());
+
   fillRBookings() {
-    let t = new Date();
-    t.setHours(0, 0, 0, 0);
-    let DayRBooking;
-    this.rBookingObj = [];
 
-    let forArray: daySHourEHour = new daySHourEHour();
-
-    this.rBookings.forEach(el => {
-
-      DayRBooking = this._roomB.getday(el.id).subscribe(dayIt => {
-        forArray.day = dayIt.day;
-        forArray.sHour = el.startDateTime;
-        forArray.eHour = el.endDateTime;
-
-        if (!this.rBookingObj[0]) {
-          let obj: RoomBookingForClient = new RoomBookingForClient();
-          var x1 = this.datepipe.transform(el.startDateTime, 'yyyy-MM-dd');
-          obj.sDate = new Date(x1 + ' ' + t);
-          var x2 = this.datepipe.transform(el.endDateTime, 'yyyy-MM-dd');
-          obj.eDate = new Date(x2 + ' ' + t);
-          obj.roomName = el.roomName
-          obj.DayHours = [];
-          obj.DayHours.push(forArray);
-
-          this.rBookingObj.push(obj);
-        }
-        else {
-          this.rBookingObj.find(rB => {
-
-            if (rB.sDate == new Date(x1 + ' ' + t) &&
-              rB.eDate == new Date(x2 + ' ' + t) &&
-              rB.roomName == el.roomName) {
-              rB.DayHours.push(forArray);
-            }
-            else {
-              let obj: RoomBookingForClient = new RoomBookingForClient();
-
-              obj.sDate = new Date(el.startDateTime);
-              obj.eDate = new Date(el.endDateTime);
-              obj.roomName = el.roomName
-              obj.DayHours = [];
-              obj.DayHours.push(forArray);
-
-              this.rBookingObj.push(obj);
-            }
-          })
-
-          if (el == this.rBookings[this.rBookings.length - 1]) {
-            console.log("this.rBookings.length-1  ", this.rBookings.length - 1)
-            //להעביר למערכים שעליהם נרוץ וכמספר איבריהם נציג
-            this.rBs = this.rBookingObj;
-          }
-        }
-      });
+    this._roomB.getRbs(0,this.dEmpty,this.dNow).subscribe(data=>{
+      let userRbs : RoomBookingForClient[]=[];
+        data.forEach(rb => { 
+          if(rb.idUser == this._userService.getCurrentUser().idNumber)
+          userRbs.push(rb);
+        });
+        this.rBs=userRbs;
     })
-  }
+
+   
+
+    // this._roomB.getRbs(this.roomb_details.controls['roomType'].value,
+    //   this.roomb_details.controls['s_date'].value,
+    //   this.roomb_details.controls['e_date'].value).subscribe(rbs => {
+    //     //?האם עובד
+    //     let userRbs =rbs.filter(rb => { rb.idUser ==this._userService.getCurrentUser().idNumber});
+    //     this.rBs=userRbs;
+    //   })
+
+
+    // let t = new Date();
+    // t.setHours(0, 0, 0, 0);
+    // let DayRBooking;
+    // this.rBookingObj = [];
+
+    // let forArray: daySHourEHour = new daySHourEHour();
+
+    // this.rBookings.forEach(el => {
+
+    //   DayRBooking = this._roomB.getday(el.id).subscribe(dayIt => {
+    //     forArray.day = dayIt.day;
+    //     forArray.sHour = el.startDateTime;
+    //     forArray.eHour = el.endDateTime;
+
+    //     if (!this.rBookingObj[0]) {
+    //       let obj: RoomBookingForClient = new RoomBookingForClient();
+    //       var x1 = this.datepipe.transform(el.startDateTime, 'yyyy-MM-dd');
+    //       obj.sDate = new Date(x1 + ' ' + t);
+    //       var x2 = this.datepipe.transform(el.endDateTime, 'yyyy-MM-dd');
+    //       obj.eDate = new Date(x2 + ' ' + t);
+    //       obj.roomName = el.roomName
+    //       obj.DayHours = [];
+    //       obj.DayHours.push(forArray);
+
+    //       this.rBookingObj.push(obj);
+    //     }
+    //     else {
+    //       this.rBookingObj.find(rB => {
+
+    //         if (rB.sDate == new Date(x1 + ' ' + t) &&
+    //           rB.eDate == new Date(x2 + ' ' + t) &&
+    //           rB.roomName == el.roomName) {
+    //           rB.DayHours.push(forArray);
+    //         }
+    //         else {
+    //           let obj: RoomBookingForClient = new RoomBookingForClient();
+
+    //           obj.sDate = new Date(el.startDateTime);
+    //           obj.eDate = new Date(el.endDateTime);
+    //           obj.roomName = el.roomName
+    //           obj.DayHours = [];
+    //           obj.DayHours.push(forArray);
+
+    //           this.rBookingObj.push(obj);
+    //         }
+    //       })
+
+    //       if (el == this.rBookings[this.rBookings.length - 1]) {
+    //         console.log("this.rBookings.length-1  ", this.rBookings.length - 1)
+    //         //להעביר למערכים שעליהם נרוץ וכמספר איבריהם נציג
+    //         this.rBs = this.rBookingObj;
+    //       }
+    //     }
+    //   });
+    // })
+    }
 
   showTypeNames() {
     this.RoomNamesToSelect = this.typeNames.get(this.roomb_details.controls['roomType'].value);

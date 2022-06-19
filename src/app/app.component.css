@@ -20,7 +20,7 @@
     width: 100%;
     height: fit-content;
     background-color: #262527;
-    /* position: fixed; */
+    position: center;
   }
   
   li {

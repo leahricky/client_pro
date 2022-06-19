@@ -124,26 +124,38 @@ export class FindUsersComponent implements OnInit {
       filter_lName: new FormControl()
     })
 
+    let date = new Date();
+    this.user_roomb_details.controls['s_date'].setValue(date);
+    this.user_roomb_details.controls['e_date'].setValue(date);
+
+    this.search();
+
+    this.user_roomb_details.controls['s_date'].setValue(null);
+    this.user_roomb_details.controls['e_date'].setValue(null);
+
   }
 
-  func() {
+  search() {
 
-    let data = this.user_roomb_details.value;
-    data.s_date = this.datepipe.transform(data.s_date, 'yyyy-MM-dd');
-    data.e_date = this.datepipe.transform(data.e_date, 'yyyy-MM-dd');
+    // if (this.user_roomb_details.controls['s_date'].value &&
+    //   this.user_roomb_details.controls['e_date'].value) {
 
-    this._user.whatever(data.s_date, data.e_date)
-      .subscribe(data => {
+      let data = this.user_roomb_details.value;
+      data.s_date = this.datepipe.transform(data.s_date, 'yyyy-MM-dd');
+      data.e_date = this.datepipe.transform(data.e_date, 'yyyy-MM-dd');
 
-        this.datasource = data;
-        this.lazyData = this.datasource;
-        this.customers = this.datasource.slice(0, (2 + 3));
-        this.totalRecords = data.length;
+      this._user.whatever(data.s_date, data.e_date)
+        .subscribe(data => {
 
-      });
-    this.loading = true;
-    this.primengConfig.ripple = true;
+          this.datasource = data;
+          this.lazyData = this.datasource;
+          this.customers = this.datasource.slice(0, (2 + 3));
+          this.totalRecords = data.length;
 
+        });
+      this.loading = true;
+      this.primengConfig.ripple = true;
+    //}
   }
 
   loadCustomers(event: LazyLoadEvent) {

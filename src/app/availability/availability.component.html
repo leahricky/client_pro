@@ -1,3 +1,6 @@
+
+<!-- הי -->
+<div></div>
 <form [formGroup]="order_details">
     <table>
         <tr>
@@ -69,14 +72,13 @@
 </form>
 <button (click)="check_availability()">fffffffff</button>
 
-<div *ngIf="flag_suc==true">
-    <img src="/assets/מפת עמדות.jpg">
+<div >
+    <img  id="map" src="/assets/מפת עמדות.jpg">
 </div>
 
 <div *ngFor="let div of divs">
     <div class="bold" [ngStyle]="{'left': div.xStartPoint+'px','top': div.yStartPoint+'px',
-    'height': (div.yEndPoint-div.yStartPoint)+'px','width': (div.xEndPoint-div.xStartPoint)+'px'}">testing
-        div.yEndPoint{{div.yEndPoint}}-div.yStartPoint:{{div.yStartPoint}}</div>
+    'height': (div.yEndPoint-div.yStartPoint)+'px','width': (div.xEndPoint-div.xStartPoint)+'px'}"></div>
 </div>
 
 <!-- style.top="{{div.yStartPoint}}+px" style.width="{{div.xStartPoint-div.xEndPoint}}+px"

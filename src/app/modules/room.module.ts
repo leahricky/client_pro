@@ -62,7 +62,8 @@ import {BrowserAnimationsModule}
      
   ],
   exports:[FindUsersComponent,CreateRoomComponent],
-  providers:[Room_Service,MessageService,ConfirmationService]
+  providers:[Room_Service]
+  // , MessageService,ConfirmationService]
 })
 export class RoomModule {
 

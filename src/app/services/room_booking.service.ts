@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { Day_room_booking } from "../models/day_room_booking.model";
 import { DatePipe } from '@angular/common'
 import { User } from "../models/user.model";
+import { RoomBookingForClient } from "../models/roomBookingForClient.model";
 
 @Injectable()
 export class Room_booking_Service {
@@ -13,29 +14,29 @@ export class Room_booking_Service {
 
     }
 
-    rBookings!: Room_booking[];
+    rBookings!: RoomBookingForClient[];
 
     //מקבל תז והולך לגט לקבל מהסרבר את ההזמנות ומציב אותן במערך
-    setRBookings(user: User) {
-        this.getRbsById(user.idNumber).subscribe(x => {
-            this.rBookings = x;
-        })
+    // setRBookings(user: User) {
+    //     this.getRbsById(user.idNumber).subscribe(x => {
+    //         this.rBookings = x;
+    //     })
+    // }
+
+    // getRBookings(): RoomBookingForClient[] {
+    //     return this.rBookings;
+    // }
+
+    getRbsById(id: string): Observable<RoomBookingForClient[]> {
+        return this._http.get<RoomBookingForClient[]>("api/RoomBooking/" + id);
     }
 
-    getRBookings(): Room_booking[] {
-        return this.rBookings;
-    }
-
-    getRbsById(id: string): Observable<Room_booking[]> {
-        return this._http.get<Room_booking[]>("api/RoomBooking/" + id);
-    }
-
-    getRbs(type: number, sDateTime: Date, eDateTime: Date): Observable<Room_booking[]> {
+    getRbs(type: number, sDateTime: Date, eDateTime: Date): Observable<RoomBookingForClient[]> {
         
         let sHelp = this.datepipe.transform(sDateTime, 'yyyy-MM-dd');
         let eHelp = this.datepipe.transform(eDateTime, 'yyyy-MM-dd');
 
-        return this._http.get<Room_booking[]>("api/RoomBooking/" + type + "/" + sHelp + "/" + eHelp);
+        return this._http.get<RoomBookingForClient[]>("api/RoomBooking/" + type + "/" + sHelp + "/" + eHelp);
     }
 
     postRb(rb: Room_booking): Observable<number> {

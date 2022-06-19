@@ -20,7 +20,8 @@ export class DialogRoomBookingsComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this._rBooking.setRBookings(this.data.user);
+    //לשנות
+   // this._rBooking.setRBookings(this.data.user);
   }
 
 }
