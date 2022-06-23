@@ -66,7 +66,7 @@ export class RoomBookingComponent implements OnInit {
 
   rBookings!: Room_booking[];
   rBookingObj!: RoomBookingForClient[];
-  rBs: RoomBookingForClient[] = [];
+  rBs!: RoomBookingForClient[] ;
 
   selectedDays: Room_booking[] = [];
   //selectedDaysDetails: Room_booking[] = [];
@@ -81,7 +81,7 @@ export class RoomBookingComponent implements OnInit {
 
   dateTimeSelected: Room_booking[] = [];
 
- // userRbs :RoomBookingForClient[]=[];
+  //userRbs :RoomBookingForClient[]=[];
   constructor(private _userService: User_Service, private _roomB: Room_booking_Service, private _room: Room_Service, public dialog: MatDialog, public datepipe: DatePipe) { }
 
 

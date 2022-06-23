@@ -141,12 +141,18 @@
 
             <!-- <button *ngif="">הוספה</button>
         <button *ngif="">עדכון</button> -->
+        <button type="submit" [attr.disabled]="!roomb_details.valid">Submit</button>
+
+        <!-- <input type="button"  [disabled]="roomb_detwails.invalid">הזמנה חדשה -->
 
         </div>
     </form>
 
 </div>
-<div style="position:absolute;top:90%;left:5%">
+
+
+<!--  ;box-sizing:initial;position:relative; -->
+<div style="position:relative; top:90%; left:5% ;">
     <!-- <form *ngFor="let rB of rBs">
         <mat-list>
             <mat-list-item id="name">שם החדר: {{rB.roomName}}</mat-list-item>
@@ -218,11 +224,11 @@
                                         </tr>
                                         <tr>
                                             <td>שעת התחלה</td>
-                                            <td>{{d.sHour | date:'hh:mm:ss'}}</td>
+                                            <td>{{d.startTime | date:'hh:mm:ss'}}</td>
                                         </tr>
                                         <tr>
                                             <td>שעת סיום</td>
-                                            <td>{{d.eHour | date:'hh:mm:ss'}}</td>
+                                            <td>{{d.endTime | date:'hh:mm:ss'}}</td>
                                         </tr>
                 
                                     </table>
